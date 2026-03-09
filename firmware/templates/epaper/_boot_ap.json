@@ -1,0 +1,16 @@
+{
+  "name": "_boot_ap",
+  "title": "System Boot (AP mode)",
+  "layout": {
+    "elements": [
+      { "type": "text", "text": "Just a moment...", "font": "SANS_REGULAR", "size": 26, "left": 0, "bottom": 100 },
+      { "type": "line", "left": 0, "right": 100, "bottom": 80, "stroke_width": 2 },
+      { "type": "text", "text": "AP: {{AP_SSID}}", "font": "SANS_REGULAR", "size": 26, "left": 0, "bottom": 40 },
+      { "type": "text", "text": "IP: {{IP_ADDRESS}}", "font": "SANS_REGULAR", "size": 26, "left": 0, "bottom": 0 }
+    ],
+    "variables": [
+      { "name": "AP_SSID", "title": "AP Network Name (SSID)" },
+      { "name": "IP_ADDRESS", "title": "IP Address" }
+    ]
+  }
+}

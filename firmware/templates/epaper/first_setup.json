@@ -1,0 +1,16 @@
+{
+  "name": "first_setup",
+  "title": "First Setup",
+  "layout": {
+    "elements": [
+      { "type": "text", "text": "First Setup", "font": "SANS_BOLD", "size": 38, "left": 0, "top": 0 },
+      { "type": "line", "left": 0, "right": 0, "top": 50, "stroke_width": 2 },
+      { "type": "text", "text": "Make sure your device is connected to '{{SSID}}' WiFi network, then open your browser and navigate to this address:", "font": "SANS_REGULAR", "size": 26, "left": 0, "top": 100, "wrap": true },
+      { "type": "text", "text": "http://{{IP_ADDRESS}}", "font": "SANS_BOLD", "size": 26, "left": 0, "top": 260 }
+    ],
+    "variables": [
+      { "name": "IP_ADDRESS", "title": "IP Address" },
+      { "name": "SSID", "title": "WiFi SSID" }
+    ]
+  }
+} 

@@ -1,0 +1,18 @@
+{
+  "name": "_boot",
+  "title": "System Boot",
+  "layout": {
+    "elements": [
+      { "type": "text", "text": "Just a moment...", "font": "SANS_REGULAR", "size": 26, "left": 0, "bottom": 140 },
+      { "type": "line", "left": 0, "right": 100, "bottom": 120, "stroke_width": 2 },
+      { "type": "text", "text": "SSID: {{CLIENT_SSID}}", "font": "SANS_REGULAR", "size": 26, "left": 0, "bottom": 80 },            
+      { "type": "text", "text": "IP: {{IP_ADDRESS}}", "font": "SANS_REGULAR", "size": 26, "left": 0, "bottom": 40 },
+      { "type": "text", "text": "http://{{HOSTNAME}}.local", "font": "SANS_REGULAR", "size": 26, "left": 0, "bottom": 0 }
+    ],
+    "variables": [
+      { "name": "CLIENT_SSID", "title": "IP Address" },
+      { "name": "HOSTNAME", "title": "Hostname" },      
+      { "name": "IP_ADDRESS", "title": "IP Address" }
+    ]
+  }  
+} 

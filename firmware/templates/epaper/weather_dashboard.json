@@ -1,0 +1,92 @@
+{
+  "name": "weather_dashboard",
+  "title": "Weather Dashboard",
+  "layout": {
+    "elements": [
+
+      { "type": "text", "text": "{{DAY_TITLE}}", "font": "SERIF_BOLD", "size": 48, "left": 0, "bottom": 510 },
+      { "type": "text", "text": "{{MONTH}}", "font": "SANS_REGULAR", "size": 26, "left": 0, "bottom": 475 },
+
+      { "type": "icon", "icon": "{{CURRENT_ICON}}", "size": 48, "left": 0, "bottom": 400 },
+      { "type": "text", "text": "{{CURRENT_TEMP}}°", "font": "SANS_BOLD", "size": 38, "left": 65, "bottom": 410 },    
+      { "type": "text", "text": "({{CURRENT_FEELS_LIKE}}°)", "font": "SANS_REGULAR", "size": 22, "left": 125, "bottom": 410 },          
+      { "type": "text", "text": "{{CURRENT_MIN}}°", "font": "SANS_REGULAR", "size": 26, "right": 80, "bottom": 408 },      
+      { "type": "text", "text": "{{CURRENT_MAX}}°", "font": "SANS_BOLD", "size": 26, "right": 0, "bottom": 408 },
+
+      { "type": "line", "left": 0, "right": 0, "bottom": 385 },
+
+      { "type": "icon", "icon": "sunrise", "size": 28, "left": 0, "bottom": 342 },
+      { "type": "text", "text": "{{SUNRISE}}", "font": "SANS_REGULAR", "size": 22, "left": 45, "bottom": 350 },      
+      { "type": "text", "text": "{{SUNSET}}", "font": "SANS_REGULAR", "size": 22, "right": 45, "bottom": 350 },
+      { "type": "icon", "icon": "sunset", "size": 28, "right": 0, "bottom": 342 },
+
+      { "type": "line", "left": 0, "right": 0, "bottom": 330 },
+
+      { "type": "icon", "icon": "{{FORECAST_01_ICON}}", "size": 28, "left": 0, "bottom": 270 },
+      { "type": "text", "text": "{{FORECAST_01_DAY}}", "font": "SANS_BOLD", "size": 22, "left": 45, "bottom": 275 },    
+      { "type": "text", "text": "{{FORECAST_01_MIN}}°", "font": "SANS_REGULAR", "size": 26, "right": 80, "bottom": 273 },
+      { "type": "text", "text": "{{FORECAST_01_MAX}}°", "font": "SANS_BOLD", "size": 26, "right": 0, "bottom": 273 },    
+
+      { "type": "icon", "icon": "{{FORECAST_02_ICON}}", "size": 28, "left": 0, "bottom": 215 },
+      { "type": "text", "text": "{{FORECAST_02_DAY}}", "font": "SANS_BOLD", "size": 22, "left": 45, "bottom": 220 },    
+      { "type": "text", "text": "{{FORECAST_02_MIN}}°", "font": "SANS_REGULAR", "size": 26, "right": 80, "bottom": 218 },  
+      { "type": "text", "text": "{{FORECAST_02_MAX}}°", "font": "SANS_BOLD", "size": 26, "right": 0, "bottom": 218 },
+
+      { "type": "icon", "icon": "{{FORECAST_03_ICON}}", "size": 28, "left": 0, "bottom": 160 },
+      { "type": "text", "text": "{{FORECAST_03_DAY}}", "font": "SANS_BOLD", "size": 22, "left": 45, "bottom": 165 },    
+      { "type": "text", "text": "{{FORECAST_03_MIN}}°", "font": "SANS_REGULAR", "size": 26, "right": 80, "bottom": 163 },      
+      { "type": "text", "text": "{{FORECAST_03_MAX}}°", "font": "SANS_BOLD", "size": 26, "right": 0, "bottom": 163 },
+
+      { "type": "icon", "icon": "{{FORECAST_04_ICON}}", "size": 28, "left": 0, "bottom": 105 },
+      { "type": "text", "text": "{{FORECAST_04_DAY}}", "font": "SANS_BOLD", "size": 22, "left": 45, "bottom": 110 },    
+      { "type": "text", "text": "{{FORECAST_04_MIN}}°", "font": "SANS_REGULAR", "size": 26, "right": 80, "bottom": 108 },
+      { "type": "text", "text": "{{FORECAST_04_MAX}}°", "font": "SANS_BOLD", "size": 26, "right": 0, "bottom": 108 },
+
+      { "type": "icon", "icon": "{{FORECAST_05_ICON}}", "size": 28, "left": 0, "bottom": 50 },
+      { "type": "text", "text": "{{FORECAST_05_DAY}}", "font": "SANS_BOLD", "size": 22, "left": 45, "bottom": 55 },    
+      { "type": "text", "text": "{{FORECAST_05_MIN}}°", "font": "SANS_REGULAR", "size": 26, "right": 80, "bottom": 53 },
+      { "type": "text", "text": "{{FORECAST_05_MAX}}°", "font": "SANS_BOLD", "size": 26, "right": 0, "bottom": 53 },
+      
+      { "type": "icon", "icon": "{{FORECAST_06_ICON}}", "size": 28, "left": 0, "bottom": -5 },
+      { "type": "text", "text": "{{FORECAST_06_DAY}}", "font": "SANS_BOLD", "size": 22, "left": 45, "bottom": 0 },    
+      { "type": "text", "text": "{{FORECAST_06_MIN}}°", "font": "SANS_REGULAR", "size": 26, "right": 80, "bottom": -2 },
+      { "type": "text", "text": "{{FORECAST_06_MAX}}°", "font": "SANS_BOLD", "size": 26, "right": 0, "bottom": -2 }
+          
+    ],
+    "variables": [
+      { "name": "DAY_TITLE", "title": "Day name" },
+      { "name": "MONTH", "title": "Month" },
+      { "name": "CURRENT_ICON", "title": "Current weather icon" },
+      { "name": "CURRENT_TEMP", "title": "Current temperature" },
+      { "name": "CURRENT_FEELS_LIKE", "title": "Feels like" },
+      { "name": "CURRENT_MIN", "title": "Today min temperature" },
+      { "name": "CURRENT_MAX", "title": "Today max temperature" },
+      { "name": "SUNRISE", "title": "Sunrise time" },
+      { "name": "SUNSET", "title": "Sunset time" },
+      { "name": "FORECAST_01_ICON", "title": "Forecast 1 icon" },
+      { "name": "FORECAST_01_DAY", "title": "Forecast 1 day" },
+      { "name": "FORECAST_01_MIN", "title": "Forecast 1 min temperature" },
+      { "name": "FORECAST_01_MAX", "title": "Forecast 1 max temperature" },
+      { "name": "FORECAST_02_ICON", "title": "Forecast 2 icon" },
+      { "name": "FORECAST_02_DAY", "title": "Forecast 2 day" },
+      { "name": "FORECAST_02_MIN", "title": "Forecast 2 min temperature" },
+      { "name": "FORECAST_02_MAX", "title": "Forecast 2 max temperature" },
+      { "name": "FORECAST_03_ICON", "title": "Forecast 3 icon" },
+      { "name": "FORECAST_03_DAY", "title": "Forecast 3 day" },
+      { "name": "FORECAST_03_MIN", "title": "Forecast 3 min temperature" },
+      { "name": "FORECAST_03_MAX", "title": "Forecast 3 max temperature" },
+      { "name": "FORECAST_04_ICON", "title": "Forecast 4 icon" },
+      { "name": "FORECAST_04_DAY", "title": "Forecast 4 day" },
+      { "name": "FORECAST_04_MIN", "title": "Forecast 4 min temperature" },
+      { "name": "FORECAST_04_MAX", "title": "Forecast 4 max temperature" },
+      { "name": "FORECAST_05_ICON", "title": "Forecast 5 icon" },
+      { "name": "FORECAST_05_DAY", "title": "Forecast 5 day" },
+      { "name": "FORECAST_05_MIN", "title": "Forecast 5 min temperature" },
+      { "name": "FORECAST_05_MAX", "title": "Forecast 5 max temperature" },
+      { "name": "FORECAST_06_ICON", "title": "Forecast 6 icon" },
+      { "name": "FORECAST_06_DAY", "title": "Forecast 6 day" },
+      { "name": "FORECAST_06_MIN", "title": "Forecast 6 min temperature" },
+      { "name": "FORECAST_06_MAX", "title": "Forecast 6 max temperature" }
+    ]
+  }
+} 

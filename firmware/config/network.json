@@ -1,0 +1,10 @@
+{
+  "client_enabled": false,
+  "client_ssid": "",
+  "client_pass": "",
+  "country": "US",
+  "ap_ssid": "pico-admin-ap",
+  "ap_pass": "",
+  "ap_pass_is_default": false,
+  "hostname": "pico-epaper-admin"
+}

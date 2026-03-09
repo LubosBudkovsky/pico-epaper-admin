@@ -1,0 +1,22 @@
+ignore/
+
+# ── Node / App ────────────────────────────────────────────────
+app/node_modules/
+app/dist/
+app/.env
+
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# ── Editor / OS ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.swp
+*.sln

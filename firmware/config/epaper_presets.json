@@ -1,0 +1,11 @@
+[
+  {
+    "name": "default",
+    "title": "Default",
+    "template": "first_setup",
+    "context": {
+      "IP_ADDRESS": { "provider": "system", "field": "ip_address" },
+      "SSID": { "provider": "system", "field": "ssid" }
+    }
+  }
+]
