@@ -19,14 +19,24 @@ from lib.config import save_config
 _CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 
-def _get_ntptime():
-    try:
-        log("Syncing NTP time...")
-        ntptime.settime()
-        return utime.localtime()
-    except Exception as e:
-        log(f"NTP sync failed: {e}")
-        return None
+def _get_ntptime(retries=3, retry_delay=2):
+    """Sync system time via NTP. Retries on failure with a short delay.
+
+    ntptime.settime() has a 1-second default socket timeout and is called
+    immediately after DHCP completes, so the first attempt can fail if the
+    DNS response is still in flight.  Retrying a couple of times is enough
+    to cover that window.
+    """
+    for attempt in range(1, retries + 1):
+        try:
+            log(f"Syncing NTP time... (attempt {attempt}/{retries})")
+            ntptime.settime()
+            return utime.localtime()
+        except Exception as e:
+            log(f"NTP sync failed: {e}")
+            if attempt < retries:
+                utime.sleep(retry_delay)
+    return None
 
 
 def _gen_pass():

@@ -3,35 +3,49 @@
 No typing / dataclasses — uses plain classes and pure functions.
 """
 
-import json
 import re
 
 
 def inject_layout_context_data(layout, context):
-    """Inject values from context into layout by replacing {{KEY}} tokens.
+    """Inject values from context into layout by replacing {{KEY}} tokens in-place.
 
-    JSON-serializes layout, performs regex replacement of {{KEY}} tokens
-    with values from context, then parses back into a dict.
-    If parsing fails the original layout dict is returned.
+    Walks the layout dict recursively and replaces string values that contain
+    {{KEY}} tokens with the corresponding context value.  Operates in-place to
+    avoid the serialize→regex→deserialize round-trip that previously held
+    2-3× the layout size in RAM simultaneously (json.dumps + substituted string
+    + json.loads output, all live at the same time).
     """
-
-    def _repr(val):
-        if isinstance(val, (dict, list)):
-            return json.dumps(val)
-        return str(val)
-
-    def _replace(m):
-        key = m.group(1)
-        if key in context:
-            return _repr(context[key])
-        return m.group(0)
-
-    s = json.dumps(layout)
-    replaced = re.sub(r"\{\{(.*?)\}\}", _replace, s)
-    try:
-        return json.loads(replaced)
-    except ValueError:
+    if not context:
         return layout
+
+    def _sub(s):
+        """Replace all {{KEY}} tokens in string s."""
+        if "{{" not in s:
+            return s
+        for key, val in context.items():
+            token = "{{" + key + "}}"
+            if token in s:
+                s = s.replace(token, str(val))
+        return s
+
+    def _walk(obj):
+        if isinstance(obj, dict):
+            for k in obj:
+                v = obj[k]
+                if isinstance(v, str):
+                    obj[k] = _sub(v)
+                elif isinstance(v, (dict, list)):
+                    _walk(v)
+        elif isinstance(obj, list):
+            for i in range(len(obj)):
+                item = obj[i]
+                if isinstance(item, str):
+                    obj[i] = _sub(item)
+                elif isinstance(item, (dict, list)):
+                    _walk(item)
+
+    _walk(layout)
+    return layout
 
 
 class Box:
@@ -48,9 +62,9 @@ class Box:
 
 
 def get_device_config(device_config):
-    """Extract padding and rotation from device_config dict.
+    """Extract padding, rotation and invert flag from device_config dict.
 
-    Returns (padding_top, padding_right, padding_bottom, padding_left, rotation).
+    Returns (padding_top, padding_right, padding_bottom, padding_left, rotation, invert_colors).
     """
 
     def _int(d, key, default=0):
@@ -65,6 +79,7 @@ def get_device_config(device_config):
         _int(device_config, "padding_bottom"),
         _int(device_config, "padding_left"),
         _int(device_config, "rotation"),
+        bool(device_config.get("invert_colors", False)),
     )
 
 

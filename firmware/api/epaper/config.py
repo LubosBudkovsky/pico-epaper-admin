@@ -1,7 +1,7 @@
 """ePaper device config and templates API routes.
 
 Routes:
-    GET  /api/epaper/config     — return device config (rotation, padding, refresh_interval, layout_preset)
+    GET  /api/epaper/config     — return device config (rotation, padding, refresh_interval, invert_colors, layout_preset)
     POST /api/epaper/config     — save device config, triggers refresh + scheduler
     GET  /api/epaper/templates  — list available templates from /templates/epaper/
 """
@@ -19,6 +19,7 @@ _CONFIG_DEFAULTS = {
     "layout_preset": "default",
     "refresh_interval": 0,
     "rotation": 0,
+    "invert_colors": False,
     "padding_top": 0,
     "padding_right": 0,
     "padding_bottom": 0,
@@ -111,6 +112,10 @@ async def post_epaper_config(request):
                 existing[key] = int(body[key])
             except (ValueError, TypeError):
                 pass
+
+    # Update boolean fields
+    if "invert_colors" in body:
+        existing["invert_colors"] = bool(body["invert_colors"])
 
     save_config(existing, "epaper")
     log(

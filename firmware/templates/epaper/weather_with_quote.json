@@ -1,0 +1,19 @@
+{
+  "name": "weather_with_quote",
+  "title": "Weather with Quote",
+  "layout": { 
+    "elements": [                  
+      { "type": "icon", "icon": "{{CURRENT_ICON}}", "size": 48, "right": 70, "top": 0 },
+      { "type": "text", "text": "{{CURRENT_TEMP}}°", "font": "SANS_BOLD", "size": 38, "right": 0, "top": 5 },
+      { "type": "text", "text": "{{QUOTE}}", "font": "SERIF_REGULAR", "size": 42, "bottom": 60, "left": 0, "wrap": true },
+      { "type": "line", "left": 0, "right": 320, "bottom": 9 },
+      { "type": "text", "text": "{{AUTHOR}}", "font": "SANS_REGULAR", "size": 26, "bottom": 0, "left": 60, "wrap": true }
+    ],
+    "variables": [      
+      { "name": "CURRENT_ICON", "title": "Current weather icon" },
+      { "name": "CURRENT_TEMP", "title": "Current temperature" },                  
+      { "name": "QUOTE", "title": "Quote" },
+      { "name": "AUTHOR", "title": "Author" }
+    ]
+  }  
+} 

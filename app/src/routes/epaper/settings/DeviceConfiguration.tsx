@@ -1,12 +1,19 @@
-import { Fieldset, Grid, NumberInput, Select, Stack } from "@mantine/core";
+import { Divider, Fieldset, Grid, NumberInput, Select, Stack, Switch } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
 import type { EpaperConfigFormValues } from "@/types/epaper";
+import { useState } from "react";
 
 interface Props {
   form: UseFormReturnType<EpaperConfigFormValues>;
 }
 
 export default function DeviceConfiguration({ form }: Props) {
+
+  const [invertColors, setInvertColors] = useState(form.getInitialValues().invert_colors ?? false)
+
+  // Track invert_colors changes in uncontrolled mode so conditional UI is reactive
+  form.watch('invert_colors', ({ value }) => setInvertColors(Boolean(value)))
+
   return (
     <Fieldset legend="Device Configuration">
       <Stack>
@@ -94,6 +101,16 @@ export default function DeviceConfiguration({ form }: Props) {
             />
           </Grid.Col>
         </Grid>
+
+        <Divider />
+
+        <Switch
+          label="Invert Colors"
+          description="Display dark background with light content."
+          checked={invertColors}
+          {...form.getInputProps('invert_colors', { type: 'checkbox' })}
+        />
+        
       </Stack>
     </Fieldset>
   );

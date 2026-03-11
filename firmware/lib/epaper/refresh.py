@@ -72,8 +72,13 @@ def _extract_by_path(data, path):
     return cur
 
 
-def _fetch_provider_json(url):
+def _fetch_provider_json(url, retries=3, retry_delay_ms=3000):
     """Fetch JSON from an external URL. Returns dict or list on success, {} on failure.
+
+    Retries up to `retries` times with `retry_delay_ms` milliseconds between
+    attempts.  The inter-retry delay uses asyncio.sleep() so the event loop
+    keeps running (CYW43 network driver needs to be polled — utime.sleep()
+    would freeze it, causing the WiFi link to go stale on subsequent fetches).
 
     r.close() is called in a finally block so the socket and SSL context are
     always released — even when r.json() raises.  Without this, each failed
@@ -81,22 +86,33 @@ def _fetch_provider_json(url):
     subsequent connections fail with [Errno 12] ENOMEM.
     """
     import urequests
+    import asyncio
 
-    r = None
-    try:
-        r = urequests.get(url, timeout=10)
-        data = r.json()
-        return data
-    except Exception as e:
-        log(f"refresh: HTTP fetch failed ({url}): {e}")
-        return {}
-    finally:
-        if r is not None:
-            try:
-                r.close()
-            except Exception:
-                pass
-        gc.collect()  # free SSL context + response buffer immediately
+    for attempt in range(1, retries + 1):
+        r = None
+        try:
+            r = urequests.get(url, timeout=10)
+            data = r.json()
+            return data
+        except Exception as e:
+            log(f"refresh: HTTP fetch failed (attempt {attempt}/{retries}, {url}): {e}")
+            if attempt < retries:
+                # Yield to the event loop so the CYW43 driver stays healthy
+                try:
+                    asyncio.get_event_loop().run_until_complete(
+                        asyncio.sleep_ms(retry_delay_ms)
+                    )
+                except Exception:
+                    pass
+        finally:
+            if r is not None:
+                try:
+                    r.close()
+                except Exception:
+                    pass
+            gc.collect()  # free SSL context + response buffer immediately
+
+    return {}
 
 
 def _resolve_variables(variables, saved_context):
@@ -270,6 +286,7 @@ def epaper_refresh(backend, template_name=None, context_override=None):
             "padding_bottom": epaper_cfg.get("padding_bottom", 0),
             "padding_left": epaper_cfg.get("padding_left", 0),
             "rotation": epaper_cfg.get("rotation", 0),
+            "invert_colors": epaper_cfg.get("invert_colors", False),
         }
         del epaper_cfg
         gc.collect()
@@ -279,8 +296,11 @@ def epaper_refresh(backend, template_name=None, context_override=None):
             saved_context = context_override
         else:
             saved_context = preset.get("context", {}) or {}
-        variables = layout.get("variables", [])
+        del preset
+
         parsed_context = _resolve_variables(variables, saved_context)
+        del variables
+        del saved_context
 
         gc.collect()
 
@@ -293,6 +313,12 @@ def epaper_refresh(backend, template_name=None, context_override=None):
 
         log(f"refresh: rendering template '{template_name}'")
         Renderer(backend).render(final)
+        del final
+
+        # Free font/icon modules immediately — they're not needed until the
+        # next refresh
+        clear_font_cache()
+        clear_icon_cache()
         gc.collect()
 
         log("refresh: done")

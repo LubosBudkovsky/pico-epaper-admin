@@ -116,9 +116,12 @@ class Renderer:
             self.padding_bottom,
             self.padding_left,
             self.rotation,
+            self.invert_colors,
         ) = get_device_config(device_config)
 
-        self.backend.init_canvas(self.width, self.height, self.rotation)
+        self.backend.init_canvas(
+            self.width, self.height, self.rotation, self.invert_colors
+        )
 
         # Read back actual dimensions the backend chose
         self.width = self.backend.width

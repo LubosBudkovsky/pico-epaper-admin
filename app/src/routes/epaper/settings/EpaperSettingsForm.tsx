@@ -36,6 +36,7 @@ export default function EpaperSettingsForm({
       // Device config — from global epaper.json, not the preset
       rotation: (configData?.rotation ?? 0).toString(),
       refresh_interval: (configData?.refresh_interval ?? 0).toString(),
+      invert_colors: configData?.invert_colors ?? false,
       padding_top: configData?.padding_top ?? 50,
       padding_right: configData?.padding_right ?? 50,
       padding_bottom: configData?.padding_bottom ?? 50,

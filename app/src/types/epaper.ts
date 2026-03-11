@@ -11,6 +11,7 @@ export interface EpaperActiveConfig {
   layout_preset: string;
   rotation: number;
   refresh_interval: number;
+  invert_colors: boolean;
   padding_top: number;
   padding_right: number;
   padding_bottom: number;
@@ -34,6 +35,7 @@ export interface EpaperConfigFormValues {
   // Device config (global)
   rotation: string;
   refresh_interval: string;
+  invert_colors: boolean;
   padding_top: number;
   padding_right: number;
   padding_bottom: number;

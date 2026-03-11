@@ -3,6 +3,7 @@
   "layout_preset": "default",
   "refresh_interval": 0,
   "rotation": 90,
+  "invert_colors": false,
   "padding_top": 100,
   "padding_right": 80,
   "padding_bottom": 100,

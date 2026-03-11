@@ -4,9 +4,9 @@
   "layout": { 
     "elements": [      
       { "type": "icon", "icon": "quote", "size": 96, "top": 0, "left": -20, "wrap": true },
-      { "type": "text", "text": "{{QUOTE}}", "font": "SERIF_REGULAR", "size": 36, "bottom": 60, "left": 0, "wrap": true },
-      { "type": "line", "left": 0, "right": 320, "bottom": 10 },
-      { "type": "text", "text": "{{AUTHOR}}", "font": "SANS_REGULAR", "size": 22, "bottom": 3, "left": 60, "wrap": true }
+      { "type": "text", "text": "{{QUOTE}}", "font": "SERIF_REGULAR", "size": 42, "bottom": 60, "left": 0, "wrap": true },
+      { "type": "line", "left": 0, "right": 320, "bottom": 9 },
+      { "type": "text", "text": "{{AUTHOR}}", "font": "SANS_REGULAR", "size": 26, "bottom": 3, "left": 60, "wrap": true }
     ],
     "variables": [
       { "name": "QUOTE", "title": "Quote" },

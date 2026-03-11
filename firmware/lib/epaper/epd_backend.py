@@ -74,24 +74,6 @@ def clear_font_cache():
     log("EPD: font cache cleared")
 
 
-def clear_icon_cache():
-    """Evict all cached icon font modules from memory."""
-    import sys
-
-    global _icons_map_module
-    for size, mod in list(_icon_font_module_cache.items()):
-        if mod is not None:
-            mod_name = "assets.icons.bootstrap_icons_{}".format(size)
-            sys.modules.pop(mod_name, None)
-            sys.modules.pop("assets.icons", None)
-    _icon_font_module_cache.clear()
-    if _icons_map_module not in (None, False):
-        sys.modules.pop("assets.icons.icons_map", None)
-    _icons_map_module = None
-    gc.collect()
-    log("EPD: icon cache cleared")
-
-
 def _load_font_module(name, size):
     """Try to import a pre-generated font_to_py module for (name, size).
 
@@ -119,6 +101,24 @@ def _load_font_module(name, size):
 
 _icon_font_module_cache = {}  # size -> module or None
 _icons_map_module = None  # lazy-loaded assets.icons.icons_map
+
+
+def clear_icon_cache():
+    """Evict all cached icon font modules from memory."""
+    import sys
+
+    global _icons_map_module
+    for size, mod in list(_icon_font_module_cache.items()):
+        if mod is not None:
+            mod_name = "assets.icons.bootstrap_icons_{}".format(size)
+            sys.modules.pop(mod_name, None)
+            sys.modules.pop("assets.icons", None)
+    _icon_font_module_cache.clear()
+    if _icons_map_module not in (None, False):
+        sys.modules.pop("assets.icons.icons_map", None)
+    _icons_map_module = None
+    gc.collect()
+    log("EPD: icon cache cleared")
 
 
 def _load_icon_module(size):
@@ -262,15 +262,19 @@ class EPDBackend:
 
     # ── canvas control ───────────────────────────────────────────────────────
 
-    def init_canvas(self, width=None, height=None, rotation=0):
+    def init_canvas(self, width=None, height=None, rotation=0, invert_colors=False):
         """Prepare the drawing canvas with the given rotation.
 
         When rotation is 90 or 270 the canvas dimensions are swapped
         (portrait canvas for a landscape display).  The rotation is stored
         and applied in display_image().
+
+        invert_colors=True causes display_image() to XOR every byte of the draw buffer
+        before sending to the panel, producing a dark background with light content.
         """
         self._user_rotation = rotation  # preserved for logging
         self.rotation = _flip_rotation(rotation)
+        self._invert_colors = invert_colors
         epd = self._epd
 
         gc.collect()  # free any previous render state before allocating
@@ -431,6 +435,11 @@ class EPDBackend:
         epd.display_Partial(epd.buffer_black, 0, 0, epd.width, epd.height)
 
         # ── Step 2: copy/rotate draw buffer into epd.imageblack ───────────────
+        if self._invert_colors:
+            for i in range(len(self._draw_buf)):
+                self._draw_buf[i] ^= 0xFF
+            log("EPD: colors inverted")
+
         if self.rotation in (90, 270):
             log(f"EPD: rotating {self._user_rotation}°")
             _rotate_framebuf(

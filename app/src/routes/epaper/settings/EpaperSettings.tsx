@@ -91,6 +91,7 @@ export default function EpaperSettings() {
           layout_preset: savedPreset.name,
           rotation: Number(values.rotation),
           refresh_interval: Number(values.refresh_interval),
+          invert_colors: Boolean(values.invert_colors),
           padding_top: values.padding_top,
           padding_right: values.padding_right,
           padding_bottom: values.padding_bottom,
