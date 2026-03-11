@@ -1,4 +1,5 @@
 ## 0.2.0
+- Added `Weather with Quote` template
 - Added `invert_colors` setting — display dark background with light content
 - Reduced memory usage during screen refresh to prevent out-of-memory crashes
 - Context provider HTTP requests now retry on failure
