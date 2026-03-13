@@ -265,8 +265,8 @@ The boot screen template lives at `firmware/templates/epaper/_boot.json` and `fi
 epaper_refresh(backend, template_name?, context_override?)
     └─ _load_template(name)            load JSON from templates/epaper/
     └─ _resolve_variables(vars, ctx)   fetch + transform context values
+    └─ _inject_context(layout, ctx)    substitute {{VAR}} placeholders in layout
     └─ Renderer(backend).render(final)
-         └─ inject_layout_context_data()  substitute {{VAR}} placeholders
          └─ for each element:
                parse_el() / pos_from_el()  resolve position (top/bottom/left/right)
                backend.draw_text()
@@ -281,8 +281,8 @@ epaper_refresh(backend, template_name?, context_override?)
 |------|---------|
 | `lib/epaper/epd_backend.py` | Drawing backend — wraps the EPD driver, manages framebuf, handles rotation, loads font/icon modules, exposes `draw_text`, `draw_icon`, `draw_line`, `draw_rect`, `display_image`, `clear_screen` |
 | `lib/epaper/renderer.py` | Translates a layout dict into backend drawing calls |
-| `lib/epaper/render_utils.py` | Element parsing, position math (`top`/`bottom` from canvas edge), `{{VAR}}` substitution |
-| `lib/epaper/refresh.py` | Orchestrates load → resolve → render; thin `_busy` mutex prevents concurrent refreshes |
+| `lib/epaper/render_utils.py` | Element parsing and position math (`top`/`bottom` from canvas edge) |
+| `lib/epaper/refresh.py` | Orchestrates load → resolve → inject context → render; thin `_busy` mutex prevents concurrent refreshes |
 | `lib/epaper/scheduler.py` | asyncio tasks for periodic refresh (see [Scheduler](#scheduler)) |
 
 **Memory:** `EPDBackend` manages a 48 KB draw buffer (`_draw_buf`) with tight lifecycle control to minimise heap pressure: it is allocated at the start of `init_canvas()` (beginning of a render cycle, after font caches are cleared) and freed immediately after `epd.sleep()` in `display_image()`. This means the buffer is **not** resident on the heap while the HTTP server is handling requests — only the driver's own `buffer_black` (48 KB) remains pinned between refreshes. The server and a display cycle never run concurrently (asyncio single-threaded), so this is safe.
