@@ -3,50 +3,6 @@
 No typing / dataclasses — uses plain classes and pure functions.
 """
 
-import re
-
-
-def inject_layout_context_data(layout, context):
-    """Inject values from context into layout by replacing {{KEY}} tokens in-place.
-
-    Walks the layout dict recursively and replaces string values that contain
-    {{KEY}} tokens with the corresponding context value.  Operates in-place to
-    avoid the serialize→regex→deserialize round-trip that previously held
-    2-3× the layout size in RAM simultaneously (json.dumps + substituted string
-    + json.loads output, all live at the same time).
-    """
-    if not context:
-        return layout
-
-    def _sub(s):
-        """Replace all {{KEY}} tokens in string s."""
-        if "{{" not in s:
-            return s
-        for key, val in context.items():
-            token = "{{" + key + "}}"
-            if token in s:
-                s = s.replace(token, str(val))
-        return s
-
-    def _walk(obj):
-        if isinstance(obj, dict):
-            for k in obj:
-                v = obj[k]
-                if isinstance(v, str):
-                    obj[k] = _sub(v)
-                elif isinstance(v, (dict, list)):
-                    _walk(v)
-        elif isinstance(obj, list):
-            for i in range(len(obj)):
-                item = obj[i]
-                if isinstance(item, str):
-                    obj[i] = _sub(item)
-                elif isinstance(item, (dict, list)):
-                    _walk(item)
-
-    _walk(layout)
-    return layout
-
 
 class Box:
     """Absolute-pixel bounding box produced by parse_el()."""

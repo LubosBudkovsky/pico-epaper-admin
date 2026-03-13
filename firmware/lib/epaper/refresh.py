@@ -17,6 +17,40 @@ _TEMPLATES_DIR = "/templates/epaper"
 _busy = False
 
 
+def _inject_context(layout, context):
+    """Replace {{KEY}} tokens throughout the layout dict with resolved context values."""
+    if not context:
+        return layout
+
+    def _sub(s):
+        if "{{" not in s:
+            return s
+        for key, val in context.items():
+            token = "{{" + key + "}}"
+            if token in s:
+                s = s.replace(token, str(val))
+        return s
+
+    def _walk(obj):
+        if isinstance(obj, dict):
+            for k in obj:
+                v = obj[k]
+                if isinstance(v, str):
+                    obj[k] = _sub(v)
+                elif isinstance(v, (dict, list)):
+                    _walk(v)
+        elif isinstance(obj, list):
+            for i in range(len(obj)):
+                item = obj[i]
+                if isinstance(item, str):
+                    obj[i] = _sub(item)
+                elif isinstance(item, (dict, list)):
+                    _walk(item)
+
+    _walk(layout)
+    return layout
+
+
 def _get_active_preset():
     """Return the active layout preset dict from epaper_presets.json.
 
@@ -304,11 +338,14 @@ def epaper_refresh(backend, template_name=None, context_override=None):
 
         gc.collect()
 
-        # Build wrapper dict — context injection happens inside the renderer
+        # Inject resolved context values into layout (replaces {{KEY}} tokens)
+        layout = _inject_context(layout, parsed_context)
+        del parsed_context
+        gc.collect()
+
         final = {
             "layout": layout,
             "device_config": device_config,
-            "context": parsed_context,
         }
 
         log(f"refresh: rendering template '{template_name}'")

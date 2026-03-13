@@ -23,7 +23,6 @@ The backend is a thin hardware abstraction and must implement:
 
 from lib.epaper.render_utils import (
     get_device_config,
-    inject_layout_context_data,
     parse_el,
     pos_from_el,
 )
@@ -80,10 +79,9 @@ class Renderer:
     def render(self, body):
         """Render layout onto the backend canvas and push to display.
 
-        `body` may be either:
-        - a wrapper dict with `layout`, `context`, and optional `device_config` keys
-          (context injection happens here inside the renderer), or
-        - a plain layout dict with `elements` and optional `device_config`.
+        `body` must be a dict with `layout` and optional `device_config` keys.
+        The layout must already have all context variables resolved
+        ({{KEY}} tokens replaced) before calling this method.
 
         After iterating elements, display_image() is called to push to hardware.
         """
@@ -91,24 +89,13 @@ class Renderer:
             log("Renderer: invalid body (not a dict)")
             return
 
-        # Accept wrapper dict: {layout, context, device_config}
-        if "layout" in body or "context" in body:
-            raw_layout = body.get("layout", body)
-            layout_context = body.get("context", {})
-            device_config = body.get("device_config", {})
-            if not isinstance(raw_layout, dict):
-                log("Renderer: invalid layout in wrapper body")
-                return
-            if not isinstance(layout_context, dict):
-                layout_context = {}
-            if not isinstance(device_config, dict):
-                device_config = {}
-            layout = inject_layout_context_data(raw_layout, layout_context)
-        else:
-            layout = body
-            device_config = body.get("device_config", {}) or {}
-            if not isinstance(device_config, dict):
-                device_config = {}
+        layout = body.get("layout", {})
+        device_config = body.get("device_config", {})
+        if not isinstance(layout, dict):
+            log("Renderer: invalid layout in body")
+            return
+        if not isinstance(device_config, dict):
+            device_config = {}
 
         (
             self.padding_top,
